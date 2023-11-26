@@ -1,8 +1,5 @@
-package MessageQueue.Consumer;
+package MessageQueue.MessageInterception;
 
-import MessageQueue.Exceptions.NoChannelException;
-import MessageQueue.Exceptions.NoNewMessageException;
-import MessageQueue.Exceptions.SerializationException;
 import MessageQueue.Queuing.MessageQueue;
 import MessageQueue.Serialization.PayloadSerializer;
 import MessageQueue.Utilities.Message;
@@ -11,30 +8,32 @@ import MessageQueue.Utilities.MessageHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageConsumer implements Consumer {
+public class InterceptorMessageConsumer implements InterceptorConsumer {
     private final MessageQueue _messageQueue;
     private final PayloadSerializer _payloadSerializer;
+    private final Interceptor _parent;
     private final List<Integer> _ports;
     private final MessageHandler _messageHandler;
     private List<Thread> _threads = new ArrayList<>();
 
-    public MessageConsumer(MessageQueue messageQueue,
-                           PayloadSerializer payloadSerializer,
-                           List<Integer> ports,
-                           MessageHandler messageHandler) {
+    public InterceptorMessageConsumer(MessageQueue messageQueue,
+                                      PayloadSerializer payloadSerializer,
+                                      Interceptor parent, List<Integer> ports,
+                                      MessageHandler messageHandler) {
         _messageQueue = messageQueue;
         _payloadSerializer = payloadSerializer;
+        _parent = parent;
         _ports = ports;
         _messageHandler = messageHandler;
     }
 
-
+    @Override
     public void start() {
         for (Integer port : _ports) {
             Thread thread = new Thread(() -> {
                 try {
                     this.listen(port);
-                } catch (NoChannelException | SerializationException | NoNewMessageException | InterruptedException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             });
@@ -45,21 +44,11 @@ public class MessageConsumer implements Consumer {
 
 
     @Override
-    public <E> E getResultAfterTermination() throws InterruptedException {
-        for (Thread thread : _threads) {
-            thread.join();
-        }
-        return (E) _messageHandler.getResult();
-    }
-
-
-
-    @Override
     public List<Integer> getPorts() {
         return _ports;
     }
 
-    private void listen(Integer port) throws NoChannelException, SerializationException, NoNewMessageException, InterruptedException {
+    private void listen(Integer port) throws Exception {
         while (_messageQueue.isRunning || _messageQueue.channelsHaveMessage(port)) {
             var message = _messageQueue.getMessage(port);
 
@@ -70,6 +59,8 @@ public class MessageConsumer implements Consumer {
             Class<Message> type = Message.class;
             _messageHandler.setMessage(_payloadSerializer.deserialize(message, type));
             _messageHandler.handle();
+            var result = _messageHandler.getResult();
+            _parent.send(result,port);
         }
     }
 }
