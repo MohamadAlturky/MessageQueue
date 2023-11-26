@@ -15,10 +15,14 @@ public class MessageConsumer implements Consumer {
     private final MessageQueue _messageQueue;
     private final PayloadSerializer _payloadSerializer;
     private final List<Integer> _ports;
+    private boolean _listening = true;
     private final MessageHandler _messageHandler;
     private List<Thread> _threads = new ArrayList<>();
 
-    public MessageConsumer(MessageQueue messageQueue, PayloadSerializer payloadSerializer, List<Integer> ports, MessageHandler messageHandler) {
+    public MessageConsumer(MessageQueue messageQueue,
+                           PayloadSerializer payloadSerializer,
+                           List<Integer> ports,
+                           MessageHandler messageHandler) {
         _messageQueue = messageQueue;
         _payloadSerializer = payloadSerializer;
         _ports = ports;
@@ -26,7 +30,7 @@ public class MessageConsumer implements Consumer {
     }
 
 
-    private void start() {
+    public void start() {
         for (Integer port : _ports) {
             Thread thread = new Thread(() -> {
                 try {
@@ -42,7 +46,7 @@ public class MessageConsumer implements Consumer {
 
 
     @Override
-    public <E> E getResult() throws InterruptedException {
+    public <E> E getResultAfterTermination() throws InterruptedException {
         for (Thread thread : _threads) {
             thread.join();
         }
@@ -50,12 +54,6 @@ public class MessageConsumer implements Consumer {
     }
 
 
-    private boolean _listening = true;
-
-    @Override
-    public void closeSession() {
-        _listening = false;
-    }
 
     @Override
     public List<Integer> getPorts() {
@@ -63,13 +61,13 @@ public class MessageConsumer implements Consumer {
     }
 
     private void listen(Integer port) throws NoChannelException, SerializationException, NoNewMessageException, InterruptedException {
-        while (_listening || _messageQueue.channelsHaveMessage(port)) {
+        while (_messageQueue.isRunning || _messageQueue.channelsHaveMessage(port)) {
             var message = _messageQueue.getMessage(port);
 
-            if(message  == null || !_listening) {
+            if (message == null && !_messageQueue.isRunning) {
+                System.out.println("Breaking");
                 break;
             }
-
             Class<Message> type = Message.class;
             _messageHandler.setMessage(_payloadSerializer.deserialize(message, type));
             _messageHandler.handle();

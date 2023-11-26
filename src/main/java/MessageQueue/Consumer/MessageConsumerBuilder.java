@@ -22,7 +22,7 @@ public class MessageConsumerBuilder implements Builder<MessageConsumer> {
 
 
 
-    public void setMessageBroker(MessageQueue messageQueue) {
+    public void setMessageQueue(MessageQueue messageQueue) {
         this._messageQueue = messageQueue;
     }
 

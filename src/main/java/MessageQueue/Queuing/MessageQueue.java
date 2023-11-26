@@ -22,6 +22,7 @@ public class MessageQueue {
     }
 
     public void submitMessage(String json, Integer port) throws NoChannelException, QueueAttemptToStopException {
+        System.out.println(json + " submitted");
         if(_stopAcceptMessages){
             throw new QueueAttemptToStopException();
         }
@@ -30,6 +31,7 @@ public class MessageQueue {
         }
         synchronized (_consumersLock) {
             _channels.get(port).add(json);
+            System.out.println("Added Json " + json);
             _consumersLock.notifyAll();
         }
     }
@@ -54,19 +56,22 @@ public class MessageQueue {
     public String getMessage(Integer port) throws InterruptedException, NoChannelException {
 
         synchronized (_consumersLock) {
+            System.out.println("Thread + " + Thread.currentThread().getName());
             if (_channels.get(port) == null) {
                 throw new NoChannelException("No channel on port " + port.toString());
             }
 
             while (_channels.get(port).isEmpty() && isRunning) {
                 _consumersLock.wait();
+                System.out.println("Waited");
             }
 
-            if(_channels.get(port).isEmpty()){
+            if(_channels.get(port).isEmpty()) {
+                System.out.println("nullnullnullnullnullnullnullnullnullnullnullnullnullnull");
                 return null;
             }
             String msg = _channels.get(port).poll();
-
+            System.out.println(msg +" taken");
             synchronized (_terminationLock) {
                 _terminationLock.notifyAll();
             }
@@ -86,9 +91,9 @@ public class MessageQueue {
                 isRunning = false;
                 System.out.println("the queue terminated successfully " + queue.getClass().getName());
             }
-            synchronized (_consumersLock){
-                _consumersLock.notifyAll();
-            }
+        }
+        synchronized (_consumersLock){
+            _consumersLock.notifyAll();
         }
     }
 }
