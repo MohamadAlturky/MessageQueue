@@ -1,4 +1,7 @@
-package MessageQueue.Utilities;
+package SentenceFilter;
+
+import MessageQueue.Utilities.Message;
+import MessageQueue.Utilities.MessageHandler;
 
 import java.util.ArrayList;
 import java.util.List;

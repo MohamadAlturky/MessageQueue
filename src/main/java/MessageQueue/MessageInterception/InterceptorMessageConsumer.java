@@ -7,6 +7,7 @@ import MessageQueue.Utilities.MessageHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InterceptorMessageConsumer implements InterceptorConsumer {
     private final MessageQueue _messageQueue;
@@ -15,6 +16,7 @@ public class InterceptorMessageConsumer implements InterceptorConsumer {
     private final List<Integer> _ports;
     private final MessageHandler _messageHandler;
     private List<Thread> _threads = new ArrayList<>();
+    private boolean _finished = false;
 
     public InterceptorMessageConsumer(MessageQueue messageQueue,
                                       PayloadSerializer payloadSerializer,
@@ -42,6 +44,18 @@ public class InterceptorMessageConsumer implements InterceptorConsumer {
         }
     }
 
+    @Override
+    public boolean finished() {
+        return _finished;
+    }
+
+    private PipeLine _pipeLine;
+
+    @Override
+    public void setPipeLine(PipeLine pipeLine) {
+        _pipeLine = pipeLine;
+    }
+
 
     @Override
     public List<Integer> getPorts() {
@@ -49,18 +63,19 @@ public class InterceptorMessageConsumer implements InterceptorConsumer {
     }
 
     private void listen(Integer port) throws Exception {
-        while (_messageQueue.isRunning || _messageQueue.channelsHaveMessage(port)) {
+//        while (_messageQueue.isRunning || _messageQueue.channelsHaveMessage(port)) {
+        while (true) {
             var message = _messageQueue.getMessage(port);
-
-            if (message == null && !_messageQueue.isRunning) {
-                System.out.println("Breaking");
+            if (Objects.equals(message, MessageQueue.END_OF_STREAM) && !_messageQueue.isRunning) {
+                _finished = true;
+                _pipeLine.notifyFinishing();
                 break;
             }
             Class<Message> type = Message.class;
             _messageHandler.setMessage(_payloadSerializer.deserialize(message, type));
             _messageHandler.handle();
             var result = _messageHandler.getResult();
-            _parent.send(result,port);
+            _parent.send(result, port);
         }
     }
 }

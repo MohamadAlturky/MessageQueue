@@ -14,6 +14,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -25,30 +26,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/mohamad/Desktop/clean/MessageQueue/src/main/java/MessageQueue",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mohamad/Desktop/clean/MessageQueue&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="MessageQueue.Exceptions" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mohamad\Desktop\clean\MessageQueue" />
+      <recent name="C:\Users\mohamad\Desktop\clean\MessageQueue\src\main\java" />
       <recent name="C:\Users\mohamad\Desktop\clean\MessageQueue\src\main\java\MessageQueue" />
       <recent name="C:\Users\mohamad\Desktop\clean\MessageQueue\src\main\java\MessageQueue\Utilities" />
-      <recent name="C:\Users\mohamad\Desktop\clean\MessageQueue\src\main\java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="MessageQueue.MessageInterception" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.SentenceFilter">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MessageQueue.Main" />
       <module name="MessageQueue" />
@@ -62,8 +64,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SentenceFilter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="SentenceFilter.SentenceFilter" />
+      <module name="MessageQueue" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="SentenceFilter.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SentenceFilter" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -78,5 +94,17 @@
       <updated>1701007913325</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="java.lang.Integer" memberName="value" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MessageQueue$SentenceFilter.ic" NAME="SentenceFilter Coverage Results" MODIFIED="1701193900972" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>SentenceFilter.*</FILTER>
+    </SUITE>
   </component>
 </project>

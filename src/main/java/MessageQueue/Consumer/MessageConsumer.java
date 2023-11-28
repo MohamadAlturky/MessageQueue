@@ -10,6 +10,7 @@ import MessageQueue.Utilities.MessageHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MessageConsumer implements Consumer {
     private final MessageQueue _messageQueue;
@@ -28,7 +29,7 @@ public class MessageConsumer implements Consumer {
         _messageHandler = messageHandler;
     }
 
-
+    @Override
     public void start() {
         for (Integer port : _ports) {
             Thread thread = new Thread(() -> {
@@ -60,10 +61,10 @@ public class MessageConsumer implements Consumer {
     }
 
     private void listen(Integer port) throws NoChannelException, SerializationException, NoNewMessageException, InterruptedException {
-        while (_messageQueue.isRunning || _messageQueue.channelsHaveMessage(port)) {
+        while (true) {
             var message = _messageQueue.getMessage(port);
 
-            if (message == null && !_messageQueue.isRunning) {
+            if (Objects.equals(message, MessageQueue.END_OF_STREAM) && !_messageQueue.isRunning) {
                 System.out.println("Breaking");
                 break;
             }

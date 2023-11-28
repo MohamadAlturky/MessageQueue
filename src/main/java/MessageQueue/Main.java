@@ -7,7 +7,7 @@ import MessageQueue.Queuing.MessageQueue;
 import MessageQueue.Queuing.MessageQueueBuilder;
 import MessageQueue.Serialization.JacksonPayloadSerializer;
 import MessageQueue.Utilities.Message;
-import MessageQueue.Utilities.StringCollectorMessageHandler;
+import SentenceFilter.StringCollectorMessageHandler;
 
 import java.util.ArrayList;
 import java.util.List;
