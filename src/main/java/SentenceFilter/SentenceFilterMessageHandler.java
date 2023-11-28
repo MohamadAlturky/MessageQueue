@@ -9,15 +9,6 @@ import java.util.Objects;
 public class SentenceFilterMessageHandler implements MessageHandler<String> {
 
     private static final String[] _questionWords = {"what", "which", "who", "where", "why", "when", "how", "whose"};
-    public static HashMap<String, Boolean> arrayToDict(String[] array) {
-        HashMap<String, Boolean> dict = new HashMap<>();
-        for (String element : array) {
-            dict.put(element, true);
-        }
-        return dict;
-    }
-
-    public static HashMap<String, Boolean> QUESTION_WORDS = arrayToDict(_questionWords);
 
     private Message<String> _message;
 
